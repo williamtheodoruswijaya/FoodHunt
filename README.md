@@ -41,7 +41,6 @@ We aim to provide an accessible, engaging, and effective companion for anyone lo
       * **Targeted Ads:** Partner restaurants can display advertisements to relevant users based on location and preferences.
   * **Interactive Map Interface:** Visually explore dining options, friend locations, and recommended routes.
   * **Social Sharing:** Easily share your dining experiences and recommendations with friends.
-  * **Data Persistence:** Uses SwiftData to save user profiles, preferences, and progress.
 
 ## 👥 Target Audience
 
