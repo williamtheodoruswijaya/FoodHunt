@@ -5,7 +5,7 @@
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
 <p align="center"\>
-  <img width="200" height="200" alt="FoodHunt" src="https://github.com/user-attachments/assets/03f9bbd6-d12c-4018-b820-83c98f3e5105" />
+  <img width="1920" height="495" alt="image" src="https://github.com/user-attachments/assets/3f1f740b-b43e-492c-92e7-343aa1e9df44" />
 </p\>
 
 **A Real-time restaurant discovery app that helps you and your friends discover and recommend dining spots in any locations, transforming the "where to eat" dilemma into a fun, interactive, and rewarding experience through real-time location tracking, user reviews, and gamification.**
