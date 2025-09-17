@@ -157,10 +157,11 @@ cd FoodHunt
 
 FoodHunt is brought to you by:
 
+  * **Davin Miguel** - 
   * **Novellina Edyawati** - UI/UX & Mobile Developer
-  * **Reynard Setiawan** - UI/UX & Mobile Developer
+  * **Reynard Setiawan** - Mobile Developer
   * **Yoel Kharis Wijaya** - Backend Developer
-  * **William Theodorus Wijaya** - Product Manager & Backend Developer
+  * **William Theodorus Wijaya** - Project Manager & Backend Developer
 
 ## 📄 License
 
