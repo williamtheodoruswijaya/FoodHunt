@@ -1,0 +1,118 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  User
+  Restaurant
+}
+
+model User {
+  userId    Int      @id @default(autoincrement())
+  username  String   @unique
+  name      String?
+  bio       String?
+  email     String   @unique
+  password  String
+  points    Int      @default(0)
+  role      Role     @default(User)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  restaurants Restaurant[]
+  reviews     Review[]
+  userBadges  UserBadges[]
+
+  @@map("User")
+}
+
+model Restaurant {
+  restaurantId Int      @id @default(autoincrement())
+  userId       Int
+  name         String
+  description  String?
+  address      String?
+  latitude     String?
+  longitude    String?
+  priceRange   Int?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  owner      User        @relation(fields: [userId], references: [userId])
+  promotions Promotion[]
+  items      Item[]
+  reviews    Review[]
+
+  @@map("Restaurant")
+}
+
+model Promotion {
+  promotionId  Int      @id @default(autoincrement())
+  restaurantId Int
+  title        String
+  description  String?
+  startDate    DateTime @map("start_date")
+  endDate      DateTime @map("end_date")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [restaurantId])
+
+  @@map("Promotions")
+}
+
+model Item {
+  itemId       Int     @id @default(autoincrement())
+  restaurantId Int
+  name         String
+  description  String?
+  price        String
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [restaurantId])
+
+  @@map("Items")
+}
+
+model Review {
+  reviewId     Int      @id @default(autoincrement())
+  userId       Int
+  restaurantId Int
+  rating       Int
+  comment      String?
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  user       User       @relation(fields: [userId], references: [userId])
+  restaurant Restaurant @relation(fields: [restaurantId], references: [restaurantId])
+
+  @@map("Review")
+}
+
+model Badge {
+  badgeId     Int     @id @default(autoincrement())
+  name        String
+  description String?
+  iconUrl     String? @map("icon_url")
+
+  userBadges UserBadges[]
+
+  @@map("Badges")
+}
+
+model UserBadges {
+  userBadgeId Int      @id @default(autoincrement())
+  userId      Int
+  badgeId     Int
+  earnedAt    DateTime @default(now()) @map("earned_at")
+
+  user  User  @relation(fields: [userId], references: [userId])
+  badge Badge @relation(fields: [badgeId], references: [badgeId])
+
+  @@unique([userId, badgeId])
+  @@map("UserBadges")
+}
