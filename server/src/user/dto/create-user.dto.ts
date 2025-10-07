@@ -153,8 +153,8 @@ export class UserResponseDto {
     dto.bio = user.getBio();
     dto.points = user.getPoints();
     dto.password = user.getPassword();
-    dto.createdAt = user.createdAt;
-    dto.updatedAt = user.updatedAt;
+    dto.createdAt = new Date();
+    dto.updatedAt = new Date();
     return dto;
   }
 }
