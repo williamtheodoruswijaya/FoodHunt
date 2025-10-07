@@ -1,4 +1,4 @@
-import { ROLE, User } from 'src/user/user.entity';
+import { ROLE, User } from '../user.entity';
 import { UserProps } from '../interfaces/iuser.entity';
 
 export class UserBuilder {
