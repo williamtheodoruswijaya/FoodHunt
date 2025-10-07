@@ -148,6 +148,7 @@ export class UserResponseDto {
     const dto = new UserResponseDto();
     dto.userId = user.getUserId();
     dto.username = user.getUsername();
+    dto.name = user.getName();
     dto.email = user.getEmail();
     dto.bio = user.getBio();
     dto.points = user.getPoints();
