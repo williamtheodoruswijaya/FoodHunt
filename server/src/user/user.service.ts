@@ -24,7 +24,7 @@ export class UserServiceImpl implements UserService {
       return this.findByEmail(email);
     }
 
-    throw new BadRequestException('Username and email must be provided');
+    throw new BadRequestException('Either username or email must be provided');
   }
 
   async findById(userId: number): Promise<UserResponseDto> {
