@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { IUserRepository } from './interface/iuser.repository';
+import { UserRepository } from './interfaces/iuser.repository';
 import { ROLE, User } from './user.entity';
-import { PrismaService } from '../common/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 import { UserBuilder } from './builder/user.builder';
 
 @Injectable()
-export class UserRepository implements IUserRepository {
+export class UserRepositoryImpl implements UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findById(id: number): Promise<User | null> {
@@ -21,6 +21,7 @@ export class UserRepository implements IUserRepository {
 
     // step 3: convert to entity and return (using builder)
     const userBuilder = new UserBuilder(userFromDb.username, userFromDb.email)
+      .setUserId(userFromDb.userId)
       .setName(userFromDb.name)
       .setRole(userFromDb.role as ROLE)
       .setPoints(userFromDb.points);
@@ -45,6 +46,7 @@ export class UserRepository implements IUserRepository {
     }
 
     const userBuilder = new UserBuilder(userFromDb.username, userFromDb.email)
+      .setUserId(userFromDb.userId)
       .setName(userFromDb.name)
       .setPoints(userFromDb.points)
       .setRole(userFromDb.role as ROLE);
@@ -67,6 +69,7 @@ export class UserRepository implements IUserRepository {
     }
 
     const userBuilder = new UserBuilder(userFromDb.username, userFromDb.email)
+      .setUserId(userFromDb.userId)
       .setName(userFromDb.name)
       .setPoints(userFromDb.points)
       .setRole(userFromDb.role as ROLE);

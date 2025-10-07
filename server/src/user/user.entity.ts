@@ -1,4 +1,4 @@
-import { UserProps } from './interface/iuser.entity';
+import { UserProps } from './interfaces/iuser.entity';
 
 export enum ROLE {
   USER = 'User',
@@ -23,6 +23,39 @@ export class User {
 
   constructor(partial: Partial<UserProps>) {
     Object.assign(this, partial);
+  }
+
+  // Getter (Setter-nya ada di Builder)
+  public getUserId(): number {
+    return this.userId;
+  }
+
+  public getUsername(): string {
+    return this.username;
+  }
+
+  public getName(): string {
+    return this.name;
+  }
+
+  public getEmail(): string {
+    return this.email;
+  }
+
+  public getPassword(): string | null {
+    return this.password;
+  }
+
+  public getBio(): string {
+    return this.bio;
+  }
+
+  public getPoints(): number {
+    return this.points;
+  }
+
+  public getRole(): ROLE {
+    return this.roles;
   }
 
   // Business Logic

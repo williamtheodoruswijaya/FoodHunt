@@ -1,4 +1,5 @@
-import { ROLE, User, UserProps } from 'src/user/user.entity';
+import { ROLE, User } from 'src/user/user.entity';
+import { UserProps } from '../interfaces/iuser.entity';
 
 export class UserBuilder {
   // Data yang sedang dibuild akan disimpan disini (anggap aja ini variable temp buat builder design pattern)
@@ -15,6 +16,11 @@ export class UserBuilder {
   }
 
   // setter (chaining method for builder design pattern)
+  public setUserId(userId: number) {
+    this.props.userId = userId;
+    return this;
+  }
+
   public setName(name: string): this {
     this.props.name = name;
     return this;
