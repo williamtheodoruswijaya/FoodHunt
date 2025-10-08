@@ -22,7 +22,51 @@ class _LoginPageState extends State<LoginPage> {
   bool isPasswordVisible = false;
 
   // future enhancements: form validation, error handling, actual authentication logic
+  Future<void> login(BuildContext context) async {
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      // CustomToast(context).showToast('Please fill in all required fields!', Icons.error_rounded);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please fill in all required fields!')),
+      );
+      return;
+    }
 
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      await Auth().signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+      // CustomToast(context).showToast('Logged in successfully!', Icons.check_rounded);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Login successful!')),
+      );
+      Navigator.pushReplacementNamed(context, '/mainscreen');
+    } on FirebaseAuthException catch (e) {
+      String errorMessage = switch (e.code) {
+        'invalid-email' => 'The email address is not valid.',
+        'user-disabled' => 'Your account has been disabled.',
+        'user-not-found' => 'No user found with this email.',
+        'wrong-password' => 'Incorrect password.',
+        'invalid-credential' => 'Invalid credentials provided.',
+        _ => 'Login failed. Please try again.',
+      };
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
+      // CustomToast(context).showToast(errorMessage, Icons.error_rounded);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An unexpected error occured.')),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
