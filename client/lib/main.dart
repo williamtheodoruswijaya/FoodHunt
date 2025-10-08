@@ -1,3 +1,5 @@
+import 'package:client/pages/login.dart';
+import 'package:client/pages/register.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -30,7 +32,8 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      // ganti aja jadi LoginPage kalo mau liat halaman login
+      home: const RegisterPage(),
     );
   }
 }
