@@ -18,8 +18,8 @@ class AuthService {
       final data = jsonDecode(response.body);
       final token = data['token'];
 
-      if (token == null) {
-        throw Exception('Token tidak ditemukan di response');
+      if (token == null || token is! String || token.isEmpty) {
+        throw Exception('Token tidak valid di response');
       }
 
       TokenManager.setToken(token);
