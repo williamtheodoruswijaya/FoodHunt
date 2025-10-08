@@ -13,13 +13,14 @@ class UserService {
       throw Exception('Harus menyertakan username atau email.');
     }
 
-    // Set endpoint berdasarkan parameter yang dikirim
-    late final Uri uri;
-    if (username != null) {
-      uri = Uri.parse('${ApiConfig.baseUrl}/users/search/$username');
-    } else {
-      uri = Uri.parse('${ApiConfig.baseUrl}/users/search/$email');
-    }
+    //Tentukan URI sesuai parameter
+    final queryParams = <String, String>{};
+    if (username != null) queryParams['username'] = username;
+    if (email != null) queryParams['email'] = email;
+
+    final uri = Uri.parse(
+      '${ApiConfig.baseUrl}/users/search',
+    ).replace(queryParameters: queryParams);
 
     final response = await http.get(
       uri,
