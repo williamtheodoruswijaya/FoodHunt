@@ -9,14 +9,14 @@ class AuthService {
     required String password,
   }) async {
     final response = await http.post(
-      Uri.parse('${ApiConfig.baseUrl}/auth/login'),
+      Uri.parse('${ApiConfig.baseUrl}auth/login'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'username': username, 'password': password}),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       final data = jsonDecode(response.body);
-      final token = data['token'];
+      final token = data['data']?['accessToken'];
 
       if (token == null || token is! String || token.isEmpty) {
         throw Exception('Token tidak valid di response');
@@ -35,7 +35,7 @@ class AuthService {
     required String password,
   }) async {
     final response = await http.post(
-      Uri.parse('${ApiConfig.baseUrl}/auth/register'),
+      Uri.parse('${ApiConfig.baseUrl}auth/register'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'username': username,
