@@ -26,9 +26,7 @@ async function bootstrap(expressInstance) {
     }),
   );
 
-  const config = new DocumentBuilder()
-    .setTitle('DiBagi Split Bill API')
-    .build();
+  const config = new DocumentBuilder().setTitle('FoodHunt API').build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-docs', app, document);
 
