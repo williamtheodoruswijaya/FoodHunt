@@ -1,5 +1,6 @@
 // lib/pages/restaurant/restaurant_detail_page.dart
 import 'package:flutter/material.dart';
+import '../theme/constants.dart'; // 👈 Import constants
 
 // Model data restoran
 class Restaurant {
@@ -186,7 +187,7 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
         slivers: [
           // Status Bar (simulasi)
           SliverAppBar(
-            backgroundColor: Colors.amber[300],
+            backgroundColor: bgLogin, // 🟡 Soft yellow dari constants
             automaticallyImplyLeading: false,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -217,7 +218,7 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
 
           // Header
           SliverAppBar(
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.white, // Tetap putih agar bersih
             title: Row(
               children: [
                 IconButton(
@@ -348,7 +349,7 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.green[600],
+                          color: primary, // 💖 Pink dari constants
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
@@ -385,13 +386,13 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.yellow[200],
+                      color: bgLogin, // 🟡 Soft yellow
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
                       restaurant.priceRange,
                       style: TextStyle(
-                        color: Colors.orange[800],
+                        color: secondary, // 🟠 Orange
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
                       ),
@@ -413,7 +414,7 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
                         child: Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Colors.grey[100],
+                            color: bg, // ⚪ Light grey dari constants
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Column(
@@ -441,7 +442,7 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
                         child: Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Colors.grey[100],
+                            color: bg, // ⚪ Light grey
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Column(
@@ -469,7 +470,7 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
                         child: Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Colors.grey[100],
+                            color: bg, // ⚪ Light grey
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Column(
@@ -516,29 +517,31 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
-                      children: restaurant.categories.map((category) {
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: FilterChip(
-                            label: Text(category.name),
-                            selected: category.name == selectedCategory,
-                            onSelected: (bool selected) {
-                              if (selected) {
-                                setState(() {
-                                  selectedCategory = category.name;
-                                });
-                              }
-                            },
-                            selectedColor: Colors.orange[300],
-                            checkmarkColor: Colors.white,
-                            labelStyle: TextStyle(
-                              color: category.name == selectedCategory
-                                  ? Colors.white
-                                  : Colors.black,
-                            ),
-                          ),
-                        );
-                      }).toList(),
+                      children:
+                          restaurant.categories.map((category) {
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: FilterChip(
+                                label: Text(category.name),
+                                selected: category.name == selectedCategory,
+                                onSelected: (bool selected) {
+                                  if (selected) {
+                                    setState(() {
+                                      selectedCategory = category.name;
+                                    });
+                                  }
+                                },
+                                selectedColor: secondary, // 🟠 Orange
+                                checkmarkColor: Colors.white,
+                                labelStyle: TextStyle(
+                                  color:
+                                      category.name == selectedCategory
+                                          ? Colors.white
+                                          : Colors.black,
+                                ),
+                              ),
+                            );
+                          }).toList(),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -597,7 +600,7 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.orange[700],
+                                        color: secondary, // 🟠 Orange
                                       ),
                                     ),
                                   ],
@@ -622,7 +625,7 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
                 top: 8,
                 left: 16,
                 right: 16,
-                bottom: 16, // tidak perlu space untuk cart
+                bottom: 16,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -681,7 +684,7 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
                                           i < review.rating
                                               ? Icons.star
                                               : Icons.star_border,
-                                          color: Colors.amber,
+                                          color: secondary, // 🟠 Orange
                                           size: 16,
                                         ),
                                       ),
@@ -714,7 +717,6 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
           ),
         ],
       ),
-      // ❌ BOTTOM NAVIGATION (CART) DIHAPUS
     );
   }
 }
