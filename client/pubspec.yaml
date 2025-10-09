@@ -30,3 +30,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/google-icon.svg
+    - assets/images/sushi_cuy_hero.jpeg
+    - assets/images/sushi_cuy_menu1.jpeg
+    - assets/images/sushi_cuy_menu2.jpeg
+    - assets/images/sushi_cuy_menu3.jpeg
