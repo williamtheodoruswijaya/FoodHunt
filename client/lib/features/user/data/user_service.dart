@@ -19,7 +19,7 @@ class UserService {
     if (email != null) queryParams['email'] = email;
 
     final uri = Uri.parse(
-      '${ApiConfig.baseUrl}/users/search',
+      '${ApiConfig.baseUrl}users/search',
     ).replace(queryParameters: queryParams);
 
     final response = await http.get(
@@ -42,7 +42,7 @@ class UserService {
     if (token == null) throw Exception('Token belum tersedia.');
 
     final response = await http.get(
-      Uri.parse('${ApiConfig.baseUrl}/users/$userId'),
+      Uri.parse('${ApiConfig.baseUrl}users/$userId'),
       headers: {'Authorization': 'Bearer $token'},
     );
 
