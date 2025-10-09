@@ -84,8 +84,11 @@ export class ReviewController {
     description: 'Delete a review using id',
     type: WebResponse<string>,
   })
-  async delete(@Param('id') id: number): Promise<WebResponse<string>> {
-    const status = await this.reviewService.delete(id);
+  async delete(
+    @Param('id') id: number,
+    @Auth() user: User,
+  ): Promise<WebResponse<string>> {
+    const status = await this.reviewService.delete(id, user);
     return {
       data: status,
     };

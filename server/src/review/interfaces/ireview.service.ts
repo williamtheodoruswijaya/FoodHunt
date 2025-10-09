@@ -9,5 +9,5 @@ export interface ReviewService {
   ): Promise<ReviewResponse>;
   getReviews(restaurantId: number): Promise<ReviewResponse[]>;
   findById(reviewId: number): Promise<ReviewResponse>;
-  delete(reviewId: number): Promise<string>;
+  delete(reviewId: number, user: User): Promise<string>;
 }

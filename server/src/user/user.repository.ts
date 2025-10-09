@@ -81,4 +81,29 @@ export class UserRepositoryImpl implements UserRepository {
     }
     return userBuilder.build();
   }
+
+  async findManyByIds(userIds: number[]): Promise<User[]> {
+    if (userIds.length === 0) {
+      return [];
+    }
+
+    const usersFromDb = await this.prisma.user.findMany({
+      where: {
+        userId: {
+          in: userIds,
+        },
+      },
+    });
+
+    return usersFromDb.map((dbUser) =>
+      new UserBuilder(dbUser.username, dbUser.email)
+        .setUserId(dbUser.userId)
+        .setName(dbUser.name)
+        .setRole(dbUser.role as ROLE)
+        .setBio(dbUser.bio)
+        .setPassword(dbUser.password)
+        .setPoints(dbUser.points)
+        .build(),
+    );
+  }
 }

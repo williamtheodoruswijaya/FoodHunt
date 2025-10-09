@@ -1,4 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ReviewService } from './interfaces/ireview.service';
 import { ReviewRepository } from './interfaces/ireview.repository';
 import { CreateReviewDto, ReviewResponse } from './dto/create-review.dto';
@@ -38,10 +43,55 @@ export class ReviewServiceImpl implements ReviewService {
   }
 
   async getReviews(restaurantId: number): Promise<ReviewResponse[]> {
-    // TODO: create UserRepository bulks SELECT (findManys)
+    // 1. get reviews from repository
+    const reviews = await this.reviewRepository.getReviews(restaurantId);
+    if (!reviews || reviews.length === 0) {
+      return [];
+    }
+
+    // 2. get unique id of each user
+    const userIds = [...new Set(reviews.map((review) => review.getUserId()))];
+
+    // 3. get all relevant user in one single query
+    const users = await this.userRepository.findManyByIds(userIds);
+
+    // 4. map each user into a MAP for O(1) search
+    const map = new Map(users.map((user) => [user.getUserId(), user]));
+
+    // 5. merge review data and users
+    return reviews.map((review) => {
+      const user = map.get(review.getUserId());
+      return ReviewResponse.convertToResponse(review, user);
+    });
   }
 
-  async findById(reviewId: number): Promise<ReviewResponse> {}
+  async findById(reviewId: number): Promise<ReviewResponse> {
+    if (!reviewId || reviewId <= 0) {
+      throw new BadRequestException('User ID tidak valid.');
+    }
 
-  async delete(reviewId: number): Promise<string> {}
+    const review = await this.reviewRepository.findById(reviewId);
+
+    const userId = review.getUserId();
+    const user = await this.userRepository.findById(userId);
+
+    return ReviewResponse.convertToResponse(review, user);
+  }
+
+  async delete(reviewId: number, user: User): Promise<string> {
+    await this.prisma.$transaction(async (tx) => {
+      const targetReview = await this.reviewRepository.findById(reviewId);
+      if (!targetReview) {
+        throw new BadRequestException('Review Not Found.');
+      }
+
+      if (targetReview.getUserId() !== user.getUserId()) {
+        throw new UnauthorizedException('You are not the owner of this review');
+      }
+
+      await this.reviewRepository.delete(reviewId, tx);
+    });
+
+    return `Successfully deleted review with id ${reviewId}`;
+  }
 }
