@@ -23,7 +23,10 @@ export class AuthServiceImpl implements AuthService {
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
   ) {}
-  async register(req: CreateUserDto): Promise<UserResponseDto> {
+  async register(
+    req: CreateUserDto,
+    owner?: boolean,
+  ): Promise<UserResponseDto> {
     // 1. start transaction
     const createdUserEntity = await this.prisma.$transaction(async (tx) => {
       // 2. check for duplicates user
@@ -45,11 +48,13 @@ export class AuthServiceImpl implements AuthService {
         .setName(req.name)
         .setBio('')
         .setPassword(hashedPassword)
-        .setPoints(0)
-        .setRole(ROLE.USER)
-        .build();
+        .setPoints(0);
 
-      return await this.authRepository.save(userEntity, tx);
+      if (owner) {
+        userEntity.setRole(ROLE.RESTAURANT);
+      }
+
+      return await this.authRepository.save(userEntity.build(), tx);
     });
 
     return UserResponseDto.convertToResponse(createdUserEntity);
