@@ -52,6 +52,8 @@ export class AuthServiceImpl implements AuthService {
 
       if (owner) {
         userEntity.setRole(ROLE.RESTAURANT);
+      } else {
+        userEntity.setRole(ROLE.USER);
       }
 
       return await this.authRepository.save(userEntity.build(), tx);
