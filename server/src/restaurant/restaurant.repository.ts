@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { RestaurantRepository } from './interfaces/irestaurant.repository';
 
 @Injectable()
-export class RestaurantRepository {
+export class RestaurantRepositoryImpl implements RestaurantRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAllBasic() {
@@ -36,21 +37,5 @@ export class RestaurantRepository {
       _count: { rating: true },
     });
     return { average: agg._avg.rating ?? 0, count: agg._count.rating };
-  }
-
-  async createReview(params: {
-    restaurantId: number;
-    userId: number;
-    rating: number;
-    comment?: string;
-  }) {
-    return this.prisma.review.create({
-      data: {
-        restaurantId: params.restaurantId,
-        userId: params.userId,
-        rating: params.rating,
-        comment: params.comment ?? null,
-      },
-    });
   }
 }
