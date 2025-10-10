@@ -5,6 +5,7 @@ import {
   Get,
   Inject,
   Param,
+  ParseIntPipe,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -25,7 +26,9 @@ export class ReviewController {
 
   @Post('create/:id')
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'Create a review' })
+  @ApiOperation({
+    summary: 'Create a review with id params as the restaurant id',
+  })
   @ApiResponse({
     status: 201,
     description: 'Review Created Succesfully',
@@ -34,7 +37,7 @@ export class ReviewController {
   async create(
     @Body() createReviewDto: CreateReviewDto,
     @Auth() user: User,
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
   ): Promise<WebResponse<ReviewResponse>> {
     const review = await this.reviewService.create(createReviewDto, user, id);
     return {
@@ -42,7 +45,7 @@ export class ReviewController {
     };
   }
 
-  @Get(':id')
+  @Get('restaurant/:id')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get a review on a specific restaurant' })
   @ApiResponse({
@@ -51,7 +54,7 @@ export class ReviewController {
     type: WebResponse<ReviewResponse[]>,
   })
   async getReviews(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
   ): Promise<WebResponse<ReviewResponse[]>> {
     const reviews = await this.reviewService.getReviews(id);
     return {
@@ -59,7 +62,7 @@ export class ReviewController {
     };
   }
 
-  @Get('review/:id')
+  @Get(':id')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get review based on review Id (kalau butuh)' })
   @ApiResponse({
@@ -68,7 +71,7 @@ export class ReviewController {
     type: WebResponse<ReviewResponse>,
   })
   async findById(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
   ): Promise<WebResponse<ReviewResponse>> {
     const review = await this.reviewService.findById(id);
     return {
@@ -85,7 +88,7 @@ export class ReviewController {
     type: WebResponse<string>,
   })
   async delete(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Auth() user: User,
   ): Promise<WebResponse<string>> {
     const status = await this.reviewService.delete(id, user);

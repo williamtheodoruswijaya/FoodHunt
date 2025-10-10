@@ -59,6 +59,7 @@ export class ReviewRepositoryImpl implements ReviewRepository {
       where: {
         reviewId: reviewId,
       },
+      include: { user: true },
     });
 
     if (!reviewFromDb) {

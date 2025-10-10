@@ -5,6 +5,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from '../prisma/prisma.module';
 import { RestaurantModule } from './restaurant/restaurant.module';
+import { ReviewModule } from './review/review.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { RestaurantModule } from './restaurant/restaurant.module';
     AuthModule,
     UserModule,
     RestaurantModule,
+    ReviewModule,
   ],
   controllers: [],
   providers: [

@@ -17,6 +17,7 @@ export class ReviewServiceImpl implements ReviewService {
   constructor(
     @Inject('ReviewRepository')
     private readonly reviewRepository: ReviewRepository,
+    @Inject('UserRepository')
     private readonly userRepository: UserRepository,
     private readonly prisma: PrismaService,
   ) {}
