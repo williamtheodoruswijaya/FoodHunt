@@ -1,4 +1,5 @@
 import { RestaurantProps } from '../interfaces/irestaurant.entity';
+import { Restaurant } from '../restaurant.entity';
 
 export class RestaurantBuilder {
   private props: Partial<RestaurantProps> = {};
@@ -45,5 +46,9 @@ export class RestaurantBuilder {
   public setUpdatedAt(updatedAt: Date) {
     this.props.updatedAt = updatedAt;
     return this;
+  }
+
+  public build(): Restaurant {
+    return new Restaurant(this.props);
   }
 }
