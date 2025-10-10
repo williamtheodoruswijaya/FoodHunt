@@ -1,20 +1,7 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Query,
-  UseGuards,
-  ParseIntPipe,
-} from '@nestjs/common';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Get, Param, Query, ParseIntPipe } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { RestaurantService } from './restaurant.service';
 import { RecommendationQueryDto } from './dto/recommendation-query.dto';
-import { CreateReviewDto } from './dto/create-review.dto';
-import { JwtAuthGuard } from '../common/guards/jwt.guards';
-import { Auth } from '../common/decorators/user.decorator';
-import { User } from '../user/user.entity';
 
 @ApiTags('restaurants')
 @Controller('restaurants')
@@ -37,22 +24,5 @@ export class RestaurantController {
   @Get(':id/ratings/summary')
   async ratingSummary(@Param('id', ParseIntPipe) id: number) {
     return this.service.getRatingSummary(id);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @Post(':id/ratings')
-  async rateRestaurant(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() body: CreateReviewDto,
-    @Auth() user: User,
-  ) {
-    const created = await this.service.addReview({
-      restaurantId: id,
-      userId: user.getUserId(),
-      rating: body.rating,
-      comment: body.comment,
-    });
-    return created;
   }
 }

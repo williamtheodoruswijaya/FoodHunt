@@ -163,13 +163,4 @@ export class RestaurantService {
   async getRatingSummary(restaurantId: number) {
     return this.repo.getRatingSummary(restaurantId);
   }
-
-  async addReview(params: {
-    restaurantId: number;
-    userId: number;
-    rating: number;
-    comment?: string;
-  }) {
-    return this.repo.createReview(params);
-  }
 }

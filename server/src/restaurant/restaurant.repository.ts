@@ -37,20 +37,4 @@ export class RestaurantRepository {
     });
     return { average: agg._avg.rating ?? 0, count: agg._count.rating };
   }
-
-  async createReview(params: {
-    restaurantId: number;
-    userId: number;
-    rating: number;
-    comment?: string;
-  }) {
-    return this.prisma.review.create({
-      data: {
-        restaurantId: params.restaurantId,
-        userId: params.userId,
-        rating: params.rating,
-        comment: params.comment ?? null,
-      },
-    });
-  }
 }
