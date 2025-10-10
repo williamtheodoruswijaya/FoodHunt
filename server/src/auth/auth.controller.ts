@@ -45,4 +45,21 @@ export class AuthController {
       data: tokens,
     };
   }
+
+  @Post('register-owner')
+  @ApiOperation({ summary: 'Register a user who have a restaurant' })
+  @ApiResponse({ status: 409, description: 'User Already Exists' })
+  @ApiResponse({
+    status: 201,
+    description: 'User Registered Successfully',
+    type: WebResponse<UserResponseDto>,
+  })
+  async registerOwner(
+    @Body() registerDto: CreateUserDto,
+  ): Promise<WebResponse<UserResponseDto>> {
+    const user = await this.authService.register(registerDto, true);
+    return {
+      data: user,
+    };
+  }
 }

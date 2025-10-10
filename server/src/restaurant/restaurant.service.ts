@@ -6,8 +6,8 @@ export interface RecommendationResult {
   name: string;
   description?: string | null;
   address?: string | null;
-  latitude?: string | null;
-  longitude?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
   priceRange?: number | null;
   averageRating: number;
   ratingsCount: number;
@@ -68,8 +68,8 @@ export class RestaurantService {
     // Precompute coordinates
     const coords = restaurants.map((r) => ({
       id: r.restaurantId,
-      lat: r.latitude ? parseFloat(r.latitude) : NaN,
-      lng: r.longitude ? parseFloat(r.longitude) : NaN,
+      lat: r.latitude ?? NaN,
+      lng: r.longitude ?? NaN,
     }));
 
     // Optionally fetch distances via Google Distance Matrix in one batch
