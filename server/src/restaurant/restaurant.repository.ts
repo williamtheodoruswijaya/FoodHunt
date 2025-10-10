@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { RestaurantRepository } from './interfaces/irestaurant.repository';
 
 @Injectable()
-export class RestaurantRepository {
+export class RestaurantRepositoryImpl implements RestaurantRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAllBasic() {

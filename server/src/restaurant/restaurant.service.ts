@@ -1,5 +1,6 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
-import { RestaurantRepository } from './restaurant.repository';
+import { Injectable, BadRequestException, Inject } from '@nestjs/common';
+import { RestaurantService } from './interfaces/irestaurant.service';
+import { RestaurantRepository } from './interfaces/irestaurant.repository';
 
 export interface RecommendationResult {
   restaurantId: number;
@@ -16,8 +17,10 @@ export interface RecommendationResult {
 }
 
 @Injectable()
-export class RestaurantService {
-  constructor(private readonly repo: RestaurantRepository) {}
+export class RestaurantServiceImpl implements RestaurantService {
+  constructor(
+    @Inject('RestaurantRepository') private readonly repo: RestaurantRepository,
+  ) {}
 
   private haversineDistanceKm(
     lat1: number,

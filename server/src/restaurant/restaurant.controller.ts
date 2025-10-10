@@ -1,12 +1,21 @@
-import { Controller, Get, Param, Query, ParseIntPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Query,
+  ParseIntPipe,
+  Inject,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { RestaurantService } from './restaurant.service';
 import { RecommendationQueryDto } from './dto/recommendation-query.dto';
+import { RestaurantService } from './interfaces/irestaurant.service';
 
 @ApiTags('restaurants')
 @Controller('restaurants')
 export class RestaurantController {
-  constructor(private readonly service: RestaurantService) {}
+  constructor(
+    @Inject('RestaurantService') private readonly service: RestaurantService,
+  ) {}
 
   @Get('recommendations')
   async recommendations(@Query() query: RecommendationQueryDto) {

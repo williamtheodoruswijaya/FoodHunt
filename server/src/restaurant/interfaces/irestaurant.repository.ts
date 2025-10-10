@@ -1,1 +1,5 @@
-export interface RestaurantRepository {}
+export interface RestaurantRepository {
+  findAllBasic();
+  getRatingsAggregateByRestaurantIds(restaurantIds: number[]);
+  getRatingSummary(restaurantId: number);
+}
