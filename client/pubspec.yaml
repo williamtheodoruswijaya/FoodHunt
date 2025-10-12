@@ -29,3 +29,4 @@ flutter:
   assets:
     - assets/google-icon.svg
     - assets/images/
+    - assets/icons/
