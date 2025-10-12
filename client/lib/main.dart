@@ -24,15 +24,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       // ganti aja jadi LoginPage kalo mau liat halaman login
-      home: RestaurantDetailPage(
-        restaurant: dummyRestaurant,
-        menuItems: dummyMenuItems,
-      ),
+      home: LoginPage(),
     );
   }
 }
