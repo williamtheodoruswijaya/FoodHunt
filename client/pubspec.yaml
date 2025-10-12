@@ -1,13 +1,12 @@
 name: client
 description: "A new Flutter project."
 
-publish_to: 'none' 
+publish_to: "none"
 
 version: 1.0.0+1
 
 environment:
   sdk: ^3.7.2
-
 
 dependencies:
   flutter:
@@ -18,7 +17,8 @@ dependencies:
   flutter_svg: ^2.1.0
   provider: ^6.1.2
   geolocator: ^13.0.1
-  
+  flutter_launcher_icons: ^0.14.4
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -30,3 +30,8 @@ flutter:
     - assets/google-icon.svg
     - assets/images/
     - assets/icons/
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/FoodHunt.png"
