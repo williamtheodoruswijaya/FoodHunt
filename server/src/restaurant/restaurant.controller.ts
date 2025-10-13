@@ -236,6 +236,26 @@ export class RestaurantController {
     return { data: await this.service.featuredPromotions() };
   }
 
+  @Post('recommendations/batch')
+  async batchRecommendations(
+    @Body()
+    body: import('./dto/recommendation-batch.dto').RecommendationBatchDto,
+  ) {
+    const { origins, maxDistanceKm, limit } = body;
+    const results = await Promise.all(
+      (origins ?? []).map((o) =>
+        this.service.getRecommendations({
+          lat: o.lat,
+          lng: o.lng,
+          maxDistanceKm,
+          limit,
+          useMatrix: true,
+        }),
+      ),
+    );
+    return { data: results };
+  }
+
   // Analytics
   @Get(':id/analytics/overview')
   async analyticsOverview(@Param('id', ParseIntPipe) id: number) {
