@@ -3,9 +3,10 @@ import { RestaurantController } from './restaurant.controller';
 import { RestaurantServiceImpl } from './restaurant.service';
 import { RestaurantRepositoryImpl } from './restaurant.repository';
 import { ReviewModule } from '../review/review.module';
+import { GoogleMapsModule } from '../maps/google-maps.module';
 
 @Module({
-  imports: [ReviewModule],
+  imports: [ReviewModule, GoogleMapsModule],
   controllers: [RestaurantController],
   providers: [
     {

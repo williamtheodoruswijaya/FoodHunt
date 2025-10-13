@@ -27,6 +27,9 @@ import { RestaurantBuilder } from './builder/restaurant.builder';
 import { ReviewService } from '../review/interfaces/ireview.service';
 import { ReviewResponse } from '../review/dto/create-review.dto';
 
+import { GOOGLE_MAPS_GATEWAY } from '../maps/tokens';
+import type { GoogleMapsGateway } from '../maps/interfaces/igoogle-maps.gateway';
+
 export interface RecommendationResult {
   restaurantId: number;
   name: string;
@@ -46,6 +49,7 @@ export class RestaurantServiceImpl implements RestaurantService {
   constructor(
     @Inject('RestaurantRepository') private readonly repo: RestaurantRepository,
     @Inject('ReviewService') private readonly reviewService: ReviewService,
+    @Inject(GOOGLE_MAPS_GATEWAY) private readonly maps: GoogleMapsGateway,
   ) {}
 
   private async assertOwner(restaurantId: number, userId: number) {
@@ -223,45 +227,23 @@ export class RestaurantServiceImpl implements RestaurantService {
 
     // Optionally fetch distances via Google Distance Matrix in one batch
     let matrixDistances: Map<number, number> | null = null; // km
-    if (
-      useMatrix &&
-      typeof fetch !== 'undefined' &&
-      process.env.GOOGLE_MAPS_API_KEY
-    ) {
+    if (useMatrix) {
       const valid = coords.filter(
         (c) => Number.isFinite(c.lat) && Number.isFinite(c.lng),
       );
       if (valid.length > 0) {
-        const apiKey = process.env.GOOGLE_MAPS_API_KEY;
-        if (!apiKey) {
-          throw new Error('Google Maps API key is missing');
-        }
-        const destinations = valid
-          .map((c) => encodeURIComponent(`${c.lat},${c.lng}`))
-          .join('|');
-        const url = `https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=${lat},${lng}&destinations=${destinations}&key=${apiKey}`;
         try {
-          const res = await fetch(url);
-          if (res.ok) {
-            interface DistanceMatrixResponse {
-              rows: {
-                elements: {
-                  distance?: { value: number };
-                  duration?: { value: number };
-                  status: string;
-                }[];
-              }[];
-            }
-            const json: DistanceMatrixResponse = await res.json();
-            const elements = json?.rows?.[0]?.elements;
-            if (Array.isArray(elements)) {
-              matrixDistances = new Map<number, number>();
-              for (let i = 0; i < valid.length; i++) {
-                const e = elements[i];
-                const km = e?.distance?.value ? e.distance.value / 1000 : null;
-                if (km !== null) matrixDistances.set(valid[i].id, km);
-              }
-            }
+          const dests = valid.map((c) => ({
+            id: c.id,
+            location: { lat: c.lat, lng: c.lng },
+          }));
+          const dm = await this.maps.distanceMatrix({ lat, lng }, dests, {
+            units: 'metric',
+            mode: 'driving',
+          });
+          matrixDistances = new Map<number, number>();
+          for (const [id, v] of dm.entries()) {
+            matrixDistances.set(id, v.distanceKm);
           }
         } catch {
           // ignore and fallback to haversine
