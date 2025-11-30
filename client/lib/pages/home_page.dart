@@ -1,8 +1,9 @@
+import 'package:client/components/navbar.dart';
+import 'package:client/theme/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:client/pages/restaurant_detail_page.dart';
 import 'package:client/widgets/restaurant_card.dart';
-import 'package:client/pages/restaurant_swipe_page.dart';
 import 'package:client/features/restaurant/provider/restaurant_providers.dart';
 
 class HomePage extends ConsumerWidget {
@@ -14,68 +15,15 @@ class HomePage extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-
       floatingActionButton: recommendations.when(
         data:
-            (restaurants) => FloatingActionButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (_) => RestaurantSwipePage(
-                          allRestaurants: restaurants,
-                          initialIndex: 0,
-                        ),
-                  ),
-                );
-              },
-              backgroundColor: Colors.pinkAccent,
-              child: const Icon(Icons.favorite, color: Colors.white),
-            ),
+            (restaurants) =>
+                CustomFloatingActionButton(restaurants: restaurants),
         loading: () => const SizedBox.shrink(),
         error: (_, __) => const SizedBox.shrink(),
       ),
-
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.5),
-              spreadRadius: 2,
-              blurRadius: 10,
-            ),
-          ],
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(50),
-            topRight: Radius.circular(50),
-          ),
-        ),
-        child: BottomAppBar(
-          color: Colors.transparent,
-          elevation: 0,
-          shape: const CircularNotchedRectangle(),
-          notchMargin: 10,
-          clipBehavior: Clip.antiAlias,
-          child: const SizedBox(
-            height: 60,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Icon(Icons.help_outline, color: Colors.grey),
-                Icon(Icons.help_outline, color: Colors.grey),
-                SizedBox(width: 48),
-                Icon(Icons.help_outline, color: Colors.grey),
-                Icon(Icons.help_outline, color: Colors.grey),
-              ],
-            ),
-          ),
-        ),
-      ),
-
+      bottomNavigationBar: const CustomBottomNavBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -87,11 +35,7 @@ class HomePage extends ConsumerWidget {
                 children: const [
                   Row(
                     children: [
-                      Icon(
-                        Icons.location_on,
-                        color: Colors.pinkAccent,
-                        size: 20,
-                      ),
+                      Icon(Icons.location_on, color: primary, size: 20),
                       SizedBox(width: 4),
                       Text(
                         "Grand Indonesia, Jakarta",

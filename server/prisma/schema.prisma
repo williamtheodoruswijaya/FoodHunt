@@ -39,8 +39,8 @@ model Restaurant {
   name         String
   description  String?
   address      String?
-  latitude     String?
-  longitude    String?
+  latitude     Int?
+  longitude    Int?
   priceRange   Int?
   imageUrl     String?
   createdAt    DateTime @default(now()) @map("created_at")
