@@ -1,47 +1,37 @@
-class Restaurant {
-  final int id;
+class RestaurantModel {
+  final int restaurantId;
   final String name;
   final String description;
-  final double rating;
-  final String priceRange;
-  final String category;
-  final String locationName;
-  final String imageUrl;
+  final String address;
+  final String? imageUrl;
+  final int? price;
+  final double? latitude;
+  final double? longitude;
+  final double? averageRating;
 
-  Restaurant({
-    required this.id,
+  RestaurantModel({
+    required this.restaurantId,
     required this.name,
     required this.description,
-    required this.rating,
-    required this.priceRange,
-    required this.category,
-    required this.locationName,
-    required this.imageUrl,
+    required this.address,
+    this.imageUrl,
+    this.price,
+    this.latitude,
+    this.longitude,
+    this.averageRating,
   });
 
-  factory Restaurant.fromJson(Map<String, dynamic> json) {
-    return Restaurant(
-      id: json['id'] ?? json['restaurantId'] ?? 0,
-      name: json['name'] ?? '',
+  factory RestaurantModel.fromJson(Map<String, dynamic> json) {
+    return RestaurantModel(
+      restaurantId: json['restaurantId'],
+      name: json['name'],
       description: json['description'] ?? '',
-      rating: (json['averageRating'] ?? 0.0).toDouble(),
-      priceRange: json['priceRange']?.toString() ?? '',
-      category: json['category'] ?? '',
-      locationName: json['address'] ?? '',
-      imageUrl: json['imageUrl'] ?? '',
+      address: json['address'] ?? '',
+      imageUrl: json['imageUrl'],
+      price: json['priceRange'],
+      latitude: json['latitude']?.toDouble(),
+      longitude: json['longitude']?.toDouble(),
+      averageRating: (json['averageRating'] as num?)?.toDouble(),
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'rating': rating,
-      'priceRange': priceRange,
-      'category': category,
-      'locationName': locationName,
-      'imageUrl': imageUrl,
-    };
   }
 }

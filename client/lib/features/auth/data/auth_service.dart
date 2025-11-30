@@ -9,7 +9,7 @@ class AuthService {
     required String password,
   }) async {
     final response = await http.post(
-      Uri.parse('${ApiConfig.baseUrl}auth/login'),
+      Uri.parse('${ApiConfig.baseUrl}/auth/login'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'username': username, 'password': password}),
     );
@@ -35,7 +35,7 @@ class AuthService {
     required String password,
   }) async {
     final response = await http.post(
-      Uri.parse('${ApiConfig.baseUrl}auth/register'),
+      Uri.parse('${ApiConfig.baseUrl}/auth/register'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'username': username,

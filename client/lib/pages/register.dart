@@ -6,17 +6,17 @@ import 'package:client/components/CustomTextField.dart';
 import 'package:client/components/CustomButton.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:client/features/auth/providers/auth_provider.dart';
 
-class RegisterPage extends StatefulWidget {
+class RegisterPage extends ConsumerStatefulWidget {
   const RegisterPage({super.key});
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  ConsumerState<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _RegisterPageState extends ConsumerState<RegisterPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final usernameController = TextEditingController();
@@ -26,8 +26,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = context.watch<AuthProvider>();
-    final isLoading = authProvider.isLoading;
+    final authState = ref.watch(authProvider);
+    final isLoading = authState.isLoading;
 
     return Scaffold(
       backgroundColor: bgLogin,
@@ -127,17 +127,23 @@ class _RegisterPageState extends State<RegisterPage> {
                         return;
                       }
 
-                      await authProvider.register(
-                        username: usernameController.text.trim(),
-                        name: nameController.text.trim(),
-                        email: emailController.text.trim(),
-                        password: passwordController.text.trim(),
-                      );
+                      await ref
+                          .read(authProvider.notifier)
+                          .register(
+                            username: usernameController.text.trim(),
+                            name: nameController.text.trim(),
+                            email: emailController.text.trim(),
+                            password: passwordController.text.trim(),
+                          );
+                      final latestState = ref.read(authProvider);
 
-                      if (authProvider.error == null) {
+                      if (latestState.error == null) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Register successful!')),
                         );
+
+                        if (!mounted) return;
+
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
@@ -146,7 +152,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(authProvider.error!)),
+                          SnackBar(content: Text(latestState.error!)),
                         );
                       }
                     },

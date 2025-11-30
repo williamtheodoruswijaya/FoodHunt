@@ -1,28 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:client/features/restaurant/data/restaurant_model.dart';
-import 'package:client/features/item/data/item_model.dart';
+import 'package:client/features/restaurant/provider/restaurant_providers.dart';
+import 'package:client/widgets/review_item.dart';
 
-class RestaurantDetailPage extends StatefulWidget {
-  final Restaurant restaurant;
-  final List<MenuItem> menuItems;
+class RestaurantDetailPage extends ConsumerStatefulWidget {
+  final RestaurantModel restaurant;
 
-  const RestaurantDetailPage({
-    super.key,
-    required this.restaurant,
-    required this.menuItems,
-  });
+  const RestaurantDetailPage({super.key, required this.restaurant});
 
   @override
-  State<RestaurantDetailPage> createState() => _RestaurantDetailPageState();
+  ConsumerState<RestaurantDetailPage> createState() =>
+      _RestaurantDetailPageState();
 }
 
-class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
+class _RestaurantDetailPageState extends ConsumerState<RestaurantDetailPage> {
   bool expanded = false;
+  int userRating = 0;
 
   @override
   Widget build(BuildContext context) {
     final restaurant = widget.restaurant;
-    final menuItems = widget.menuItems;
+    print("DETAIL PAGE PRICE: ${restaurant.price}");
+    print("DETAIL PAGE RATING: ${restaurant.averageRating}");
+
+    //final menuAsync = ref.watch(
+    //restaurantMenuProvider(restaurant.restaurantId),
+    //);
+
+    final ratingAsync = ref.watch(
+      restaurantRatingProvider(restaurant.restaurantId),
+    );
+    final reviewsAsync = ref.watch(
+      restaurantReviewsProvider(restaurant.restaurantId),
+    );
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -38,11 +49,11 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
             right: 0,
             height: expanded ? screenHeight * 0.75 : screenHeight * 0.9,
             child: Hero(
-              tag: restaurant.id,
-              child: Image.asset(
-                restaurant.imageUrl,
+              tag: restaurant.restaurantId,
+              child: Image.network(
+                restaurant.imageUrl ??
+                    "https://via.placeholder.com/800?text=No+Image",
                 fit: BoxFit.cover,
-                alignment: Alignment.topCenter,
               ),
             ),
           ),
@@ -132,49 +143,60 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
                                     borderRadius: BorderRadius.circular(50),
                                   ),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      const Icon(
-                                        Icons.star,
-                                        color: Colors.amber,
-                                        size: 18,
-                                      ),
-                                      const SizedBox(width: 4),
-                                      Text(
-                                        restaurant.rating.toString(),
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 12),
-                                      const Icon(
-                                        Icons.attach_money,
-                                        color: Colors.black87,
-                                        size: 18,
-                                      ),
-                                      Text(
-                                        restaurant.priceRange,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Flexible(
-                                        child: Text(
-                                          restaurant.category
-                                              .split("•")
-                                              .first
-                                              .trim(),
-                                          overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.black87,
+                                      // Rating
+                                      Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.star,
+                                            color: Colors.amber,
+                                            size: 18,
                                           ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            restaurant.averageRating != null
+                                                ? restaurant.averageRating!
+                                                    .toStringAsFixed(1)
+                                                : "-",
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+
+                                          const SizedBox(width: 120),
+                                          //price
+                                          const Icon(
+                                            Icons.attach_money,
+                                            size: 18,
+                                            color: Colors.green,
+                                          ),
+
+                                          Text(
+                                            restaurant.price?.toString() ?? "-",
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+
+                                      // Category
+                                      Text(
+                                        "-",
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
+                                          color: Colors.black87,
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
+
                                 const SizedBox(height: 10),
 
                                 // Lokasi
@@ -188,101 +210,160 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage> {
                                     const SizedBox(width: 4),
                                     Expanded(
                                       child: Text(
-                                        restaurant.locationName,
+                                        restaurant.address,
                                         style: const TextStyle(fontSize: 13.5),
                                       ),
                                     ),
                                   ],
                                 ),
                                 const SizedBox(height: 16),
-
-                                // Menu
                                 const Text(
-                                  "Menu Restoran",
+                                  "Review & RATING",
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                const SizedBox(height: 12),
-
-                                // List menu
-                                SizedBox(
-                                  height: 130,
-                                  child: ListView.separated(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: menuItems.length,
-                                    separatorBuilder:
-                                        (_, __) => const SizedBox(width: 10),
-                                    itemBuilder: (context, index) {
-                                      final item = menuItems[index];
-                                      return Container(
-                                        width: 120,
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey[100],
-                                          borderRadius: BorderRadius.circular(
-                                            16,
-                                          ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(
-                                                0.05,
-                                              ),
-                                              blurRadius: 4,
-                                              offset: const Offset(0, 2),
-                                            ),
-                                          ],
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius:
-                                                  const BorderRadius.vertical(
-                                                    top: Radius.circular(16),
-                                                  ),
-                                              child: Image.asset(
-                                                item.imageUrl,
-                                                height: 70,
-                                                width: double.infinity,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 6,
-                                                    vertical: 4,
-                                                  ),
-                                              child: Text(
-                                                item.name,
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 13,
-                                                ),
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 6,
-                                                  ),
-                                              child: Text(
-                                                item.price,
-                                                style: const TextStyle(
-                                                  color: Colors.pinkAccent,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
+                                const SizedBox(height: 10),
+                                // ===================
+                                // REVIEW FORM USER
+                                // ===================
+                                Container(
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(16),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black12,
+                                        blurRadius: 6,
+                                        offset: const Offset(0, 3),
+                                      ),
+                                    ],
                                   ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Rating Anda",
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 6),
+
+                                      // ⭐⭐⭐⭐⭐ - BINTANG TAP
+                                      Row(
+                                        children: List.generate(5, (index) {
+                                          return GestureDetector(
+                                            onTap: () {
+                                              setState(
+                                                () => userRating = index + 1,
+                                              );
+                                            },
+                                            child: Icon(
+                                              index < userRating
+                                                  ? Icons.star
+                                                  : Icons.star_border,
+                                              color: Colors.amber,
+                                              size: 28,
+                                            ),
+                                          );
+                                        }),
+                                      ),
+
+                                      const SizedBox(height: 14),
+
+                                      const Text(
+                                        "Review",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 6),
+
+                                      // TEXTAREA
+                                      Container(
+                                        padding: const EdgeInsets.all(12),
+                                        height: 120,
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFF7EFD8),
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                        ),
+                                        child: const TextField(
+                                          maxLines: null,
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            hintText:
+                                                "Ceritakan Pengalaman Anda...",
+                                          ),
+                                        ),
+                                      ),
+
+                                      const SizedBox(height: 16),
+
+                                      // KIRIM REVIEW
+                                      SizedBox(
+                                        width: double.infinity,
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            print("User Rating: $userRating");
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.pink,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(50),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 14,
+                                            ),
+                                          ),
+                                          child: const Text(
+                                            "Kirim Review",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                reviewsAsync.when(
+                                  loading:
+                                      () => const Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                  error:
+                                      (e, _) => Text("Gagal memuat review: $e"),
+                                  data: (reviews) {
+                                    if (reviews.isEmpty) {
+                                      return const Text(
+                                        "Belum ada review.",
+                                        style: TextStyle(color: Colors.grey),
+                                      );
+                                    }
+
+                                    return Column(
+                                      children:
+                                          reviews.map((r) {
+                                            return ReviewItem(
+                                              name:
+                                                  "User ${r.userId}", // atau ambil dari Users table nanti
+                                              review: r.comment ?? "-",
+                                              rating: r.rating,
+                                            );
+                                          }).toList(),
+                                    );
+                                  },
                                 ),
                               ],
                             ),

@@ -1,40 +1,22 @@
-class MenuItem {
-  final int id;
-  final int restaurantId;
+class MenuItemModel {
+  final int itemId;
   final String name;
-  final String description;
+  final String? description;
   final String price;
-  final String imageUrl;
 
-  MenuItem({
-    required this.id,
-    required this.restaurantId,
+  MenuItemModel({
+    required this.itemId,
     required this.name,
-    required this.description,
+    this.description,
     required this.price,
-    required this.imageUrl,
   });
 
-  factory MenuItem.fromJson(Map<String, dynamic> json) {
-    return MenuItem(
-      // sesuain sama response backend nanti kalo udah ada
-      id: json['id'] ?? 0,
-      restaurantId: json['restaurantId'] ?? 0,
-      name: json['name'] ?? '',
-      description: json['description'] ?? '',
-      price: json['price']?.toString() ?? '',
-      imageUrl: json['imageUrl'] ?? '',
+  factory MenuItemModel.fromJson(Map<String, dynamic> json) {
+    return MenuItemModel(
+      itemId: json["itemId"],
+      name: json["name"],
+      description: json["description"],
+      price: json["price"],
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'restaurantId': restaurantId,
-      'name': name,
-      'description': description,
-      'price': price,
-      'imageUrl': imageUrl,
-    };
   }
 }

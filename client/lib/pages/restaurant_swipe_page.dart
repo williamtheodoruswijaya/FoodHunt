@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:client/features/restaurant/data/restaurant_model.dart';
-import 'package:client/features/item/data/item_model.dart';
 
 class RestaurantSwipePage extends StatefulWidget {
-  final List<Restaurant> allRestaurants;
-  final Map<int, List<MenuItem>> allMenus;
+  final List<RestaurantModel> allRestaurants;
   final int initialIndex;
 
   const RestaurantSwipePage({
     super.key,
     required this.allRestaurants,
-    required this.allMenus,
     this.initialIndex = 0,
   });
 
@@ -65,7 +62,6 @@ class _RestaurantSwipePageState extends State<RestaurantSwipePage>
   @override
   Widget build(BuildContext context) {
     final restaurant = widget.allRestaurants[currentIndex];
-    final menuItems = widget.allMenus[restaurant.id] ?? [];
     final screenHeight = MediaQuery.of(context).size.height;
 
     final total = widget.allRestaurants.length;
@@ -87,18 +83,22 @@ class _RestaurantSwipePageState extends State<RestaurantSwipePage>
         onHorizontalDragEnd: (details) => _handleSwipe(details),
         child: Stack(
           children: [
+            // background image
             Positioned.fill(
-              child: Image.asset(
-                widget.allRestaurants[nextIndex].imageUrl,
+              child: Image.network(
+                widget.allRestaurants[nextIndex].imageUrl ??
+                    "https://via.placeholder.com/600",
                 fit: BoxFit.cover,
                 alignment: Alignment.topCenter,
               ),
             ),
 
+            // main image with swipe translate
             Transform.translate(
               offset: Offset(dragOffset + animationOffset, 0),
-              child: Image.asset(
-                restaurant.imageUrl,
+              child: Image.network(
+                restaurant.imageUrl ??
+                    "https://via.placeholder.com/600?text=No+Image",
                 fit: BoxFit.cover,
                 alignment: Alignment.topCenter,
                 height: expanded ? screenHeight * 0.75 : screenHeight * 0.9,
@@ -106,7 +106,7 @@ class _RestaurantSwipePageState extends State<RestaurantSwipePage>
               ),
             ),
 
-            // efek icon melayang
+            // floating heart/dislike effect
             ...floatingIcons.map(
               (icon) => _FloatingIconWidget(type: icon.type),
             ),
@@ -121,6 +121,7 @@ class _RestaurantSwipePageState extends State<RestaurantSwipePage>
               ),
             ),
 
+            // bottom expandable card
             Align(
               alignment: Alignment.bottomCenter,
               child: AnimatedContainer(
@@ -171,6 +172,8 @@ class _RestaurantSwipePageState extends State<RestaurantSwipePage>
                               ),
                             ),
                             const SizedBox(height: 8),
+
+                            // expand animation
                             AnimatedCrossFade(
                               duration: const Duration(milliseconds: 250),
                               crossFadeState:
@@ -183,6 +186,8 @@ class _RestaurantSwipePageState extends State<RestaurantSwipePage>
                                 children: [
                                   _infoRow(restaurant),
                                   const SizedBox(height: 10),
+
+                                  // location
                                   Row(
                                     children: [
                                       const Icon(
@@ -193,7 +198,7 @@ class _RestaurantSwipePageState extends State<RestaurantSwipePage>
                                       const SizedBox(width: 4),
                                       Expanded(
                                         child: Text(
-                                          restaurant.locationName,
+                                          restaurant.address,
                                           style: const TextStyle(
                                             fontSize: 13.5,
                                           ),
@@ -201,28 +206,8 @@ class _RestaurantSwipePageState extends State<RestaurantSwipePage>
                                       ),
                                     ],
                                   ),
+
                                   const SizedBox(height: 16),
-                                  const Text(
-                                    "Menu Restoran",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 12),
-                                  SizedBox(
-                                    height: 130,
-                                    child: ListView.separated(
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: menuItems.length,
-                                      separatorBuilder:
-                                          (_, __) => const SizedBox(width: 10),
-                                      itemBuilder: (_, i) {
-                                        final item = menuItems[i];
-                                        return _menuCard(item);
-                                      },
-                                    ),
-                                  ),
                                 ],
                               ),
                             ),
@@ -230,6 +215,8 @@ class _RestaurantSwipePageState extends State<RestaurantSwipePage>
                         ),
                       ),
                     ),
+
+                    // expand button
                     Center(
                       child: Container(
                         decoration: BoxDecoration(
@@ -265,55 +252,7 @@ class _RestaurantSwipePageState extends State<RestaurantSwipePage>
     );
   }
 
-  Widget _menuCard(MenuItem item) => Container(
-    width: 120,
-    decoration: BoxDecoration(
-      color: Colors.grey[100],
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.05),
-          blurRadius: 4,
-          offset: const Offset(0, 2),
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ClipRRect(
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-          child: Image.asset(
-            item.imageUrl,
-            height: 70,
-            width: double.infinity,
-            fit: BoxFit.cover,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-          child: Text(
-            item.name,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6),
-          child: Text(
-            item.price,
-            style: const TextStyle(
-              color: Colors.pinkAccent,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
-
-  Widget _infoRow(Restaurant r) => Container(
+  Widget _infoRow(RestaurantModel r) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
     decoration: BoxDecoration(
       color: Colors.grey[100],
@@ -324,23 +263,12 @@ class _RestaurantSwipePageState extends State<RestaurantSwipePage>
       children: [
         const Icon(Icons.star, color: Colors.amber, size: 18),
         const SizedBox(width: 4),
-        Text(
-          r.rating.toString(),
-          style: const TextStyle(fontWeight: FontWeight.w600),
-        ),
+        Text("-", style: const TextStyle(fontWeight: FontWeight.w600)),
         const SizedBox(width: 12),
         const Icon(Icons.attach_money, color: Colors.black87, size: 18),
-        Text(r.priceRange, style: const TextStyle(fontWeight: FontWeight.w600)),
-        const SizedBox(width: 12),
-        Flexible(
-          child: Text(
-            r.category.split("•").first.trim(),
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
-            ),
-          ),
+        Text(
+          r.price != null ? "\$" * r.price! : "-",
+          style: const TextStyle(fontWeight: FontWeight.w600),
         ),
       ],
     ),
@@ -355,6 +283,7 @@ class _RestaurantSwipePageState extends State<RestaurantSwipePage>
 
       isAnimating = true;
       final target = direction == "left" ? -400.0 : 400.0;
+
       _animation = Tween<double>(
         begin: dragOffset,
         end: target,
@@ -367,6 +296,7 @@ class _RestaurantSwipePageState extends State<RestaurantSwipePage>
                   ? (currentIndex + 1) % widget.allRestaurants.length
                   : (currentIndex - 1 + widget.allRestaurants.length) %
                       widget.allRestaurants.length;
+
           dragOffset = 0;
           animationOffset = 0;
           isAnimating = false;
@@ -406,7 +336,9 @@ class _FloatingIconWidgetState extends State<_FloatingIconWidget>
   @override
   void initState() {
     super.initState();
+
     randomX = ([-80, 0, 80]..shuffle()).first.toDouble();
+
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1200),
