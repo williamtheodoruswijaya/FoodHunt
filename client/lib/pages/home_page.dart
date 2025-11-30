@@ -1,3 +1,5 @@
+import 'package:client/components/navbar.dart';
+import 'package:client/theme/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:client/pages/restaurant_dummy_data.dart';
 import 'package:client/pages/restaurant_detail_page.dart';
@@ -13,61 +15,9 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder:
-                  (_) => RestaurantSwipePage(
-                    allRestaurants: allDummyRestaurants,
-                    allMenus: allDummyMenus,
-                    initialIndex: 0,
-                  ),
-            ),
-          );
-        },
-        backgroundColor: Colors.pinkAccent,
-        child: const Icon(Icons.favorite, color: Colors.white),
-      ),
-
+      floatingActionButton: const CustomFloatingActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.5),
-              spreadRadius: 2,
-              blurRadius: 10,
-            ),
-          ],
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(50),
-            topRight: Radius.circular(50),
-          ),
-        ),
-        child: BottomAppBar(
-          color: Colors.transparent,
-          elevation: 0,
-          shape: const CircularNotchedRectangle(),
-          notchMargin: 10,
-          clipBehavior: Clip.antiAlias,
-          child: SizedBox(
-            height: 60,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: const [
-                Icon(Icons.help_outline, color: Colors.grey),
-                Icon(Icons.help_outline, color: Colors.grey),
-                SizedBox(width: 48), // ruang kosong buat FAB
-                Icon(Icons.help_outline, color: Colors.grey),
-                Icon(Icons.help_outline, color: Colors.grey),
-              ],
-            ),
-          ),
-        ),
-      ),
+      bottomNavigationBar: const CustomBottomNavBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -82,7 +32,7 @@ class HomePage extends StatelessWidget {
                     children: const [
                       Icon(
                         Icons.location_on,
-                        color: Colors.pinkAccent,
+                        color: primary,
                         size: 20,
                       ),
                       SizedBox(width: 4),
@@ -138,7 +88,7 @@ class HomePage extends StatelessWidget {
                           Text(
                             "Claim your voucher here!",
                             style: TextStyle(
-                              color: Colors.pinkAccent,
+                              color: primary,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
