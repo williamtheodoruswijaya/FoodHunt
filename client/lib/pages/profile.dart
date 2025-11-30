@@ -16,7 +16,14 @@ class ProfilePage extends ConsumerWidget {
 
     final authState = ref.watch(authProvider);
     final user = authState.user;
-
+    print("PROFILE PAGE USER = $user");
+    if (user != null) {
+      print("PROFILE NAME   = ${user.name}");
+      print("PROFILE USERNAME = ${user.username}");
+      print("PROFILE EMAIL    = ${user.email}");
+      print("PROFILE BIO      = ${user.bio}");
+      print("PROFILE POINTS   = ${user.points}");
+    }
     if (user == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }

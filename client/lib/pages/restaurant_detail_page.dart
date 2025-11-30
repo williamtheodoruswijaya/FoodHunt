@@ -28,9 +28,9 @@ class _RestaurantDetailPageState extends ConsumerState<RestaurantDetailPage> {
     //restaurantMenuProvider(restaurant.restaurantId),
     //);
 
-    final ratingAsync = ref.watch(
-      restaurantRatingProvider(restaurant.restaurantId),
-    );
+    //final ratingAsync = ref.watch(
+    // restaurantRatingProvider(restaurant.restaurantId),
+    //);
     final reviewsAsync = ref.watch(
       restaurantReviewsProvider(restaurant.restaurantId),
     );

@@ -121,17 +121,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text(latestState.error!)),
                         );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Login successful!')),
-                        );
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HomePage(),
-                          ),
-                        );
+                        return;
                       }
+
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const HomePage(),
+                        ),
+                      );
                     },
                   ),
                   const SizedBox(height: 20),

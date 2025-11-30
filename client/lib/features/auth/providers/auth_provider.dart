@@ -3,8 +3,6 @@ import '../../user/data/user_service.dart';
 import '../../user/data/user_model.dart';
 import '../data/auth_repository.dart';
 
-// State dari login/register
-
 class AuthState {
   final UserModel? user;
   final bool isLoading;
@@ -16,12 +14,10 @@ class AuthState {
     return AuthState(
       user: user ?? this.user,
       isLoading: isLoading ?? this.isLoading,
-      error: error,
+      error: error ?? this.error,
     );
   }
 }
-
-// Notifier untuk login dan register
 
 class AuthNotifier extends StateNotifier<AuthState> {
   final AuthRepository _authRepo;
@@ -29,7 +25,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   AuthNotifier(this._authRepo, this._userService) : super(const AuthState());
 
-  // Register
   Future<void> register({
     required String username,
     required String name,
@@ -46,7 +41,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
         password: password,
       );
 
-      // setelah register selesai, lanjut login
       await login(username, password);
     } catch (e) {
       state = state.copyWith(error: e.toString());
@@ -55,15 +49,13 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  // Login
   Future<void> login(String username, String password) async {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
       await _authRepo.login(username: username, password: password);
 
-      //setelah login selesai langsung fetch profile
-      UserModel profile = await _userService.getProfile(username: username);
+      final profile = await _userService.getProfile(username: username);
 
       state = state.copyWith(user: profile);
     } catch (e) {
@@ -73,8 +65,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 }
-
-// Providers
 
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   return AuthNotifier(AuthRepository(), UserService());
