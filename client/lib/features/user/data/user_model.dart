@@ -6,6 +6,7 @@ class UserModel {
   final String bio;
   final int points;
   final String role;
+  final String? profilePicture;
 
   UserModel({
     required this.userId,
@@ -15,6 +16,7 @@ class UserModel {
     required this.bio,
     required this.points,
     required this.role,
+    this.profilePicture,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class UserModel {
       bio: json['bio'] ?? '',
       points: json['points'] ?? 0,
       role: json['role'] ?? 'USER',
+      profilePicture: json['profilePicture'],
     );
   }
 
@@ -38,6 +41,7 @@ class UserModel {
       'bio': bio,
       'points': points,
       'role': role,
+      'profilePicture': profilePicture,
     };
   }
 }
