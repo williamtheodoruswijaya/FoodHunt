@@ -1,32 +1,34 @@
 import 'package:client/components/navbar.dart';
 import 'package:client/components/statCardProfile.dart';
 import 'package:client/components/visitedCard.dart';
-import 'package:client/features/user/data/user_model.dart';
-import 'package:client/pages/restaurant_dummy_data.dart';
-import 'package:client/pages/restaurant_swipe_page.dart';
 import 'package:flutter/material.dart';
-import 'package:client/pages/home_page.dart';
-import 'package:client/features/user/data/user_model.dart'; 
 import 'package:client/theme/constants.dart';
+import 'package:client/features/restaurant/provider/restaurant_providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:client/features/auth/providers/auth_provider.dart';
 
-
-
-class ProfilePage extends StatelessWidget{
+class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final recommendations = ref.watch(restaurantRecommendationProvider);
+
+    final authState = ref.watch(authProvider);
+    final user = authState.user;
+    print("PROFILE PAGE USER = $user");
+    if (user != null) {
+      print("PROFILE NAME   = ${user.name}");
+      print("PROFILE USERNAME = ${user.username}");
+      print("PROFILE EMAIL    = ${user.email}");
+      print("PROFILE BIO      = ${user.bio}");
+      print("PROFILE POINTS   = ${user.points}");
+    }
+    if (user == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
     final size = MediaQuery.of(context).size;
-    final user = UserModel(
-      userId: 1,
-      username: 'admantix',
-      name: 'Admantix Pemantik',
-      email: 'admantix@example.com',
-      bio: 'Food lover and avid reviewer.',
-      points: 2500,
-      role: 'USER',
-      profilePicture: null,
-    );
 
     return Scaffold(
       body: Stack(
@@ -38,55 +40,53 @@ class ProfilePage extends StatelessWidget{
             height: size.height * 0.45,
             child: Container(
               decoration: BoxDecoration(
-                // kalo ga ada image pake primary color,
                 color: user.profilePicture == null ? secondary : null,
-                image: user.profilePicture != null
-                    ? DecorationImage(
-                        image: NetworkImage(user.profilePicture!),
-                        fit: BoxFit.cover,
-                        alignment: Alignment.topCenter
-                      )
-                    : null,
+                image:
+                    user.profilePicture != null
+                        ? DecorationImage(
+                          image: NetworkImage(user.profilePicture!),
+                          fit: BoxFit.cover,
+                          alignment: Alignment.topCenter,
+                        )
+                        : null,
               ),
-              child: user.profilePicture == null
-                  ? Center (
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.person,
-                            size: 100,
-                            color: Colors.white70,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            "No Profile Picture",
-                            style: TextStyle(
+              child:
+                  user.profilePicture == null
+                      ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(
+                              Icons.person,
+                              size: 100,
                               color: Colors.white70,
-                              fontSize: 16,
                             ),
-                          ),
-                          const SizedBox(height: 100),
-                        ],
-                      ),
-                    )
-                  :null,
+                            SizedBox(height: 8),
+                            Text(
+                              "No Profile Picture",
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 16,
+                              ),
+                            ),
+                            SizedBox(height: 100),
+                          ],
+                        ),
+                      )
+                      : null,
             ),
           ),
+
           Positioned(
             top: 50,
             right: 20,
             child: Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.black12,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
-                Icons.edit,
-                color: Colors.white,
-                size: 24,
-              ),
+              child: const Icon(Icons.edit, color: Colors.white, size: 24),
             ),
           ),
 
@@ -96,19 +96,17 @@ class ProfilePage extends StatelessWidget{
               height: size.height * 0.55,
               decoration: const BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(36),
-                ),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(36)),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black12,
                     blurRadius: 10,
-                    offset: const Offset(0, -5),
+                    offset: Offset(0, -5),
                   ),
                 ],
               ),
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(24.0, 10.0, 24.0, 0.0),
+                padding: const EdgeInsets.fromLTRB(24, 10, 24, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -123,10 +121,7 @@ class ProfilePage extends StatelessWidget{
                     const SizedBox(height: 8),
                     Text(
                       '@${user.username}',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                     ),
                     const SizedBox(height: 8),
                     Row(
@@ -134,23 +129,14 @@ class ProfilePage extends StatelessWidget{
                       children: [
                         const Icon(Icons.email, size: 16, color: Colors.grey),
                         const SizedBox(width: 6),
-                        Text(
-                          user.email,
-                          style: const TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
+                        Text(user.email, style: const TextStyle(fontSize: 16)),
                       ],
                     ),
                     const SizedBox(height: 12),
-                    Text(
-                      user.bio,
-                      style: const TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
+                    Text(user.bio, style: const TextStyle(fontSize: 16)),
                     const SizedBox(height: 8),
-                    // Points Section
+
+                    // Poin
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -158,33 +144,33 @@ class ProfilePage extends StatelessWidget{
                         const SizedBox(width: 8),
                         Text(
                           '${user.points} points',
-                          style: const TextStyle(
-                            fontSize: 16,
-                          ),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ],
                     ),
+
                     const SizedBox(height: 24),
-                    // Statistics Section
+
+                    // Stats
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         StatCardProfile(
-                          icon: Icons.favorite, 
-                          label: 'Favorites', 
-                          count: '20'
+                          icon: Icons.favorite,
+                          label: 'Favorites',
+                          count: '20',
                         ),
                         SizedBox(width: 16),
                         StatCardProfile(
-                          icon: Icons.edit_note, 
-                          label: 'Total Reviews', 
-                          count: '15'
+                          icon: Icons.edit_note,
+                          label: 'Total Reviews',
+                          count: '15',
                         ),
                       ],
                     ),
                     const SizedBox(height: 25),
 
-                    // Visited Restaurants Section
+                    // Visited
                     const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -196,17 +182,24 @@ class ProfilePage extends StatelessWidget{
                       ),
                     ),
                     const SizedBox(height: 18),
-                    // list of visited restaurants
+
                     SizedBox(
                       height: 100,
                       child: ListView(
                         scrollDirection: Axis.horizontal,
                         children: const [
-                          FoodItem(imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=200&q=80'),
-                          FoodItem(imageUrl: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=200&q=80'),
-                          FoodItem(imageUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=200&q=80'),
-                          FoodItem(imageUrl: 'https://images.unsplash.com/photo-1484723091739-30a097e8f929?auto=format&fit=crop&w=200&q=80'),
-                          FoodItem(imageUrl: 'https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&w=200&q=80'),
+                          FoodItem(
+                            imageUrl:
+                                'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200',
+                          ),
+                          FoodItem(
+                            imageUrl:
+                                'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=200',
+                          ),
+                          FoodItem(
+                            imageUrl:
+                                'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200',
+                          ),
                         ],
                       ),
                     ),
@@ -217,7 +210,15 @@ class ProfilePage extends StatelessWidget{
           ),
         ],
       ),
-      floatingActionButton: const CustomFloatingActionButton(),
+
+      // FAB
+      floatingActionButton: recommendations.when(
+        data:
+            (restaurants) =>
+                CustomFloatingActionButton(restaurants: restaurants),
+        loading: () => const SizedBox.shrink(),
+        error: (_, __) => const SizedBox.shrink(),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: const CustomBottomNavBar(),
     );

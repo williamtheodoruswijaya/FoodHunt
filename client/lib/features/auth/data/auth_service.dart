@@ -8,24 +8,33 @@ class AuthService {
     required String username,
     required String password,
   }) async {
+    final url = Uri.parse('${ApiConfig.baseUrl}/auth/login');
+
     final response = await http.post(
-      Uri.parse('${ApiConfig.baseUrl}auth/login'),
+      url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'username': username, 'password': password}),
+      body: jsonEncode({"username": username, "password": password}),
     );
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      final data = jsonDecode(response.body);
-      final token = data['data']?['accessToken'];
+    print("LOGIN STATUS: ${response.statusCode}");
+    print("LOGIN BODY: ${response.body}");
 
-      if (token == null || token is! String || token.isEmpty) {
-        throw Exception('Token tidak valid di response');
-      }
-
-      TokenManager.setToken(token);
-    } else {
-      throw Exception('Login gagal: ${response.body}');
+    if (response.statusCode != 201 && response.statusCode != 200) {
+      throw Exception("Login gagal: ${response.body}");
     }
+
+    final body = jsonDecode(response.body);
+
+    // Ambil token sesuai response
+    final token = body["data"]?["accessToken"];
+
+    if (token == null) {
+      throw Exception("Token tidak ditemukan dalam response");
+    }
+
+    // simpan
+    TokenManager.setToken(token);
+    print("TOKEN STORED: $token");
   }
 
   Future<void> register({
@@ -35,7 +44,7 @@ class AuthService {
     required String password,
   }) async {
     final response = await http.post(
-      Uri.parse('${ApiConfig.baseUrl}auth/register'),
+      Uri.parse('${ApiConfig.baseUrl}/auth/register'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'username': username,

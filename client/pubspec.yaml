@@ -18,7 +18,7 @@ dependencies:
   provider: ^6.1.2
   geolocator: ^14.0.2
   flutter_launcher_icons: ^0.14.4
-
+  flutter_riverpod: ^2.5.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

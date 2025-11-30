@@ -6,24 +6,24 @@ import 'package:client/components/CustomTextField.dart';
 import 'package:client/components/CustomButton.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:client/features/auth/providers/auth_provider.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   bool isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = context.watch<AuthProvider>();
+    final authState = ref.watch(authProvider);
 
     return Scaffold(
       backgroundColor: bgLogin,
@@ -91,9 +91,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   Custombutton(
-                    text:
-                        authProvider.isLoading ? "Logging you in..." : "Log in",
-                    disabled: authProvider.isLoading,
+                    text: authState.isLoading ? "Logging you in..." : "Log in",
+                    disabled: authState.isLoading,
                     onPressed: () async {
                       if (usernameController.text.isEmpty ||
                           passwordController.text.isEmpty) {
@@ -107,28 +106,30 @@ class _LoginPageState extends State<LoginPage> {
                         return;
                       }
 
-                      await authProvider.login(
-                        usernameController.text.trim(),
-                        passwordController.text.trim(),
-                      );
+                      await ref
+                          .read(authProvider.notifier)
+                          .login(
+                            usernameController.text.trim(),
+                            passwordController.text.trim(),
+                          );
 
                       if (!mounted) return;
 
-                      if (authProvider.error != null) {
+                      final latestState = ref.read(authProvider);
+
+                      if (latestState.error != null) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(authProvider.error!)),
+                          SnackBar(content: Text(latestState.error!)),
                         );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Login successful!')),
-                        );
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HomePage(),
-                          ),
-                        );
+                        return;
                       }
+
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const HomePage(),
+                        ),
+                      );
                     },
                   ),
                   const SizedBox(height: 20),
@@ -232,6 +233,7 @@ class _LoginPageState extends State<LoginPage> {
                         },
                         child: Text(
                           "Sign up",
+
                           style: GoogleFonts.inter(
                             color: Colors.black,
                             fontSize: 14,
