@@ -14,12 +14,6 @@ import { Restaurant } from './restaurant.entity';
 export class RestaurantRepositoryImpl implements RestaurantRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  // Utilities
-  private toNumberOrNull(v: string | null | undefined): number | null {
-    const n = v !== null && v !== undefined ? Number(v) : NaN;
-    return Number.isFinite(n) ? n : null;
-  }
-
   // Listing and search
   async paginate(
     page: number,
@@ -44,11 +38,10 @@ export class RestaurantRepositoryImpl implements RestaurantRepository {
       this.prisma.restaurant.count(),
     ]);
 
-    // convert lat/lng to numbers
     const mapped: BasicRestaurantRecord[] = data.map((r) => ({
       ...r,
-      latitude: this.toNumberOrNull(r.latitude),
-      longitude: this.toNumberOrNull(r.longitude),
+      latitude: r.latitude ?? null,
+      longitude: r.longitude ?? null,
     }));
     return { data: mapped, total };
   }
@@ -88,8 +81,8 @@ export class RestaurantRepositoryImpl implements RestaurantRepository {
 
     const mapped: BasicRestaurantRecord[] = data.map((r) => ({
       ...r,
-      latitude: this.toNumberOrNull(r.latitude),
-      longitude: this.toNumberOrNull(r.longitude),
+      latitude: r.latitude ?? null,
+      longitude: r.longitude ?? null,
     }));
     return { data: mapped, total };
   }
@@ -108,8 +101,8 @@ export class RestaurantRepositoryImpl implements RestaurantRepository {
     });
     return data.map<BasicRestaurantRecord>((r) => ({
       ...r,
-      latitude: this.toNumberOrNull(r.latitude),
-      longitude: this.toNumberOrNull(r.longitude),
+      latitude: r.latitude ?? null,
+      longitude: r.longitude ?? null,
     }));
   }
 
@@ -122,8 +115,8 @@ export class RestaurantRepositoryImpl implements RestaurantRepository {
     if (!r) return null;
     return {
       ...r,
-      latitude: this.toNumberOrNull(r.latitude),
-      longitude: this.toNumberOrNull(r.longitude),
+      latitude: r.latitude ?? null,
+      longitude: r.longitude ?? null,
     };
   }
 
@@ -181,8 +174,8 @@ export class RestaurantRepositoryImpl implements RestaurantRepository {
         name: entity.getName(),
         description: entity.getDescription(),
         address: entity.getAddress(),
-        latitude: String(entity.getLatitude()),
-        longitude: String(entity.getLongitude()),
+        latitude: entity.getLatitude() ?? null,
+        longitude: entity.getLongitude() ?? null,
         priceRange: entity.getPriceRange() ?? null,
       },
     });
@@ -201,8 +194,8 @@ export class RestaurantRepositoryImpl implements RestaurantRepository {
         name: partial.name,
         description: partial.description,
         address: partial.address,
-        latitude: partial.lat !== undefined ? String(partial.lat) : undefined,
-        longitude: partial.lng !== undefined ? String(partial.lng) : undefined,
+        latitude: partial.lat !== undefined ? partial.lat : undefined,
+        longitude: partial.lng !== undefined ? partial.lng : undefined,
         priceRange: partial.priceRange,
         ...(partial.imageUrl ? { imageUrl: partial.imageUrl } : {}),
       },
