@@ -1,5 +1,6 @@
 import 'package:client/pages/home_page.dart';
 import 'package:client/pages/profile.dart';
+import 'package:client/pages/search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:client/features/auth/providers/auth_provider.dart';
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       // ganti aja jadi LoginPage kalo mau liat halaman login
-      home: ProfilePage(),
+      home: SearchPage(),
     );
   }
 }
