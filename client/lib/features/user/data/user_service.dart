@@ -19,17 +19,31 @@ class UserService {
     if (email != null) queryParams['email'] = email;
 
     final uri = Uri.parse(
-      '${ApiConfig.baseUrl}users/search',
+      '${ApiConfig.baseUrl}/users/search',
     ).replace(queryParameters: queryParams);
+
+    print("GET PROFILE DEBUG -------------------------------");
+    print("REQUEST URL: $uri");
+    print("TOKEN: $token");
+    print("Query username: $username");
+    print("Query email: $email");
 
     final response = await http.get(
       uri,
       headers: {'Authorization': 'Bearer $token'},
     );
 
+    // 🔥 RESPONSE DEBUG – letakkan DI SINI
+    print("STATUS: ${response.statusCode}");
+    print("RESPONSE BODY: ${response.body}");
+    print("--------------------------------------------------");
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return UserModel.fromJson(Map<String, dynamic>.from(data));
+      final decoded = jsonDecode(response.body);
+
+      // ambil objek user dari "data"
+      final userJson = decoded["data"];
+
+      return UserModel.fromJson(Map<String, dynamic>.from(userJson));
     } else if (response.statusCode == 404) {
       throw Exception('User tidak ditemukan.');
     } else {
@@ -42,13 +56,14 @@ class UserService {
     if (token == null) throw Exception('Token belum tersedia.');
 
     final response = await http.get(
-      Uri.parse('${ApiConfig.baseUrl}users/$userId'),
+      Uri.parse('${ApiConfig.baseUrl}/users/$userId'),
       headers: {'Authorization': 'Bearer $token'},
     );
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return UserModel.fromJson(Map<String, dynamic>.from(data));
+      final decoded = jsonDecode(response.body);
+      final userJson = decoded["data"];
+      return UserModel.fromJson(Map<String, dynamic>.from(userJson));
     } else if (response.statusCode == 400) {
       throw Exception('User dengan ID $userId tidak ditemukan.');
     } else {

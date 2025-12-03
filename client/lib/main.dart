@@ -2,19 +2,10 @@ import 'package:client/pages/home_page.dart';
 import 'package:client/pages/profile.dart';
 import 'package:client/pages/search.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:client/features/auth/providers/auth_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
-        // tambahkan provider lain di sini jika ada
-      ],
-      child: const MyApp(),
-    ),
-  );
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -24,12 +15,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'FoodHunt',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
       ),
       // ganti aja jadi LoginPage kalo mau liat halaman login
-      home: SearchPage(),
+      home: LoginPage(),
     );
   }
 }

@@ -4,11 +4,12 @@ import 'package:client/pages/search.dart';
 import 'package:flutter/material.dart';
 import 'package:client/theme/constants.dart';
 import 'package:client/pages/restaurant_swipe_page.dart';
-import 'package:client/pages/restaurant_dummy_data.dart';
+import 'package:client/features/restaurant/data/restaurant_model.dart';
 
 class CustomFloatingActionButton extends StatelessWidget {
-  const CustomFloatingActionButton({super.key});
+  final List<RestaurantModel> restaurants;
 
+  const CustomFloatingActionButton({super.key, required this.restaurants});
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -19,11 +20,11 @@ class CustomFloatingActionButton extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => RestaurantSwipePage(
-                allRestaurants: allDummyRestaurants,
-                allMenus: allDummyMenus,
-                initialIndex: 0,
-              ),
+              builder:
+                  (_) => RestaurantSwipePage(
+                    allRestaurants: restaurants,
+                    initialIndex: 0,
+                  ),
             ),
           );
         },
@@ -46,7 +47,7 @@ class CustomBottomNavBar extends StatelessWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.5), // Standardized to withOpacity
+            color: Colors.grey.withOpacity(0.5),
             spreadRadius: 2,
             blurRadius: 10,
           ),
@@ -66,15 +67,15 @@ class CustomBottomNavBar extends StatelessWidget {
           height: 60,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children:[
+            children: [
               IconButton(
                 icon: const Icon(Icons.home, color: primary),
-                onPressed: (){
+                onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const HomePage()),
                   );
-                }
+                },
               ),
               IconButton(
                 icon: const Icon(Icons.search, color: primary),
@@ -85,21 +86,21 @@ class CustomBottomNavBar extends StatelessWidget {
                   );
                 }
               ),
-              SizedBox(width: 48), // Empty space for the FAB
+              const SizedBox(width: 48), // Space for FAB
               IconButton(
                 icon: const Icon(Icons.bookmark_add, color: primary),
-                onPressed: (){
-
-                }
+                onPressed: () {},
               ),
               IconButton(
                 icon: const Icon(Icons.person, color: primary),
-                onPressed: (){
+                onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const ProfilePage()),
+                    MaterialPageRoute(
+                      builder: (context) => const ProfilePage(),
+                    ),
                   );
-                }
+                },
               ),
             ],
           ),
