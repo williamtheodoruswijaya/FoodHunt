@@ -1,5 +1,3 @@
-
-
 import 'package:client/components/categoryItem.dart';
 import 'package:client/components/foodCard.dart';
 import 'package:client/components/navbar.dart';
@@ -270,7 +268,7 @@ class SearchPage extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: const CustomFloatingActionButton(),
+      floatingActionButton: const CustomFloatingActionButton(restaurants: []),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: const CustomBottomNavBar(),
     );
