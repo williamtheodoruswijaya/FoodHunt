@@ -3,6 +3,7 @@ import 'package:client/pages/profile.dart';
 import 'package:client/pages/search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:client/pages/login.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
