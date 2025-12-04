@@ -33,6 +33,7 @@ export class RestaurantRepositoryImpl implements RestaurantRepository {
           latitude: true,
           longitude: true,
           priceRange: true,
+          imageUrl: true,
         },
       }),
       this.prisma.restaurant.count(),
@@ -74,6 +75,7 @@ export class RestaurantRepositoryImpl implements RestaurantRepository {
           latitude: true,
           longitude: true,
           priceRange: true,
+          imageUrl: true,
         },
       }),
       this.prisma.restaurant.count({ where }),
@@ -83,6 +85,7 @@ export class RestaurantRepositoryImpl implements RestaurantRepository {
       ...r,
       latitude: r.latitude ?? null,
       longitude: r.longitude ?? null,
+      imageUrl: r.imageUrl ?? null,
     }));
     return { data: mapped, total };
   }
@@ -97,12 +100,14 @@ export class RestaurantRepositoryImpl implements RestaurantRepository {
         latitude: true,
         longitude: true,
         priceRange: true,
+        imageUrl: true,
       },
     });
     return data.map<BasicRestaurantRecord>((r) => ({
       ...r,
       latitude: r.latitude ?? null,
       longitude: r.longitude ?? null,
+      imageUrl: r.imageUrl ?? null,
     }));
   }
 
