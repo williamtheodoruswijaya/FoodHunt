@@ -22,6 +22,9 @@ export class RestaurantSummaryDto {
   @ApiProperty({ required: false, nullable: true })
   priceRange?: number | null;
 
+  @ApiProperty({ required: false, nullable: true })
+  imageUrl?: string | null;
+
   @ApiProperty({ description: 'Rating rata-rata', default: 0 })
   averageRating: number;
 

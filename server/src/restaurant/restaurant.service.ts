@@ -99,6 +99,7 @@ export class RestaurantServiceImpl implements RestaurantService {
         .latitude(r.latitude)
         .longitude(r.longitude)
         .priceRange(r.priceRange)
+        .imageUrl(r.imageUrl)
         .averageRating(map.get(r.restaurantId)?.avg ?? 0)
         .ratingsCount(map.get(r.restaurantId)?.count ?? 0)
         .build(),
@@ -128,6 +129,7 @@ export class RestaurantServiceImpl implements RestaurantService {
         .latitude(r.latitude)
         .longitude(r.longitude)
         .priceRange(r.priceRange)
+        .imageUrl(r.imageUrl)
         .averageRating(map.get(r.restaurantId)?.avg ?? 0)
         .ratingsCount(map.get(r.restaurantId)?.count ?? 0)
         .build(),
@@ -185,6 +187,7 @@ export class RestaurantServiceImpl implements RestaurantService {
         .latitude(r.latitude)
         .longitude(r.longitude)
         .priceRange(r.priceRange)
+        .imageUrl(r.imageUrl)
         .averageRating(map.get(r.restaurantId)?.avg ?? 0)
         .ratingsCount(map.get(r.restaurantId)?.count ?? 0)
         .build(),
@@ -315,6 +318,7 @@ export class RestaurantServiceImpl implements RestaurantService {
           .latitude(r.latitude)
           .longitude(r.longitude)
           .priceRange(r.priceRange)
+          .imageUrl(r.imageUrl)
           .averageRating(mapAgg.get(r.restaurantId)?._avg.rating ?? 0)
           .ratingsCount(mapAgg.get(r.restaurantId)?._count.rating ?? 0)
           .build(),
@@ -355,6 +359,7 @@ export class RestaurantServiceImpl implements RestaurantService {
           .latitude(r.latitude)
           .longitude(r.longitude)
           .priceRange(r.priceRange)
+          .imageUrl(r.imageUrl)
           .averageRating(map.get(r.restaurantId)?._avg.rating ?? 0)
           .ratingsCount(map.get(r.restaurantId)?._count.rating ?? 0)
           .build(),
@@ -374,6 +379,7 @@ export class RestaurantServiceImpl implements RestaurantService {
       latitude: r.latitude,
       longitude: r.longitude,
       priceRange: r.priceRange,
+      imageUrl: r.imageUrl,
       averageRating: rating.average,
       ratingsCount: rating.count,
       items: (r.items ?? []).map((i) => ({

@@ -14,6 +14,7 @@ export type BasicRestaurantRecord = {
   latitude: number | null;
   longitude: number | null;
   priceRange: number | null;
+  imageUrl: string | null;
 };
 
 export type RestaurantDetailRecord = BasicRestaurantRecord & {

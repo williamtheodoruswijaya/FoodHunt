@@ -30,6 +30,10 @@ export class RestaurantSummaryBuilder {
     this.dto.priceRange = v ?? null;
     return this;
   }
+  imageUrl(v?: string | null) {
+    this.dto.imageUrl = v ?? null;
+    return this;
+  }
   averageRating(v: number) {
     this.dto.averageRating = v;
     return this;
