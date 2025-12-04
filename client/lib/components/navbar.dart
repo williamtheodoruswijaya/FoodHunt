@@ -1,5 +1,6 @@
 import 'package:client/pages/home_page.dart';
 import 'package:client/pages/profile.dart';
+import 'package:client/pages/search.dart';
 import 'package:flutter/material.dart';
 import 'package:client/theme/constants.dart';
 import 'package:client/pages/restaurant_swipe_page.dart';
@@ -78,7 +79,12 @@ class CustomBottomNavBar extends StatelessWidget {
               ),
               IconButton(
                 icon: const Icon(Icons.search, color: primary),
-                onPressed: () {},
+                onPressed: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SearchPage()),
+                  );
+                }
               ),
               const SizedBox(width: 48), // Space for FAB
               IconButton(
