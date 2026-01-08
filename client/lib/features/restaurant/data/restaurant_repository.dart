@@ -14,11 +14,7 @@ class RestaurantRepository {
     double? lng,
     double? maxDistanceKm,
   }) async {
-    return service.getRecommendations(
-      lat: lat,
-      lng: lng,
-      maxDistanceKm: maxDistanceKm,
-    );
+    return service.list();
   }
 
   // Detail
