@@ -29,11 +29,7 @@ final restaurantRecommendationProvider = FutureProvider<List<RestaurantModel>>((
       throw Exception("LOCATION_ERROR");
     },
     data: (pos) async {
-      return repo.fetchRecommendations(
-        lat: pos.latitude,
-        lng: pos.longitude,
-        maxDistanceKm: 10,
-      );
+      return repo.fetchRecommendations();
     },
   );
 });
